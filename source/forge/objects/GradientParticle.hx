@@ -24,6 +24,7 @@ class GradientParticle extends FlxParticle
 
         var tempBitmap:flash.display.Bitmap = new Bitmap(new BitmapData(size, size, true,  FlxColor.TRANSPARENT));
         var matrix = new Matrix();
+        // tempBitmap.bitmapData.perlinNoise(20,20,3,4,true,true);
         tempBitmap.bitmapData.draw(radialGradientCircle(size),matrix,null,null,null,true);
         this.loadGraphic(tempBitmap.bitmapData);
     }

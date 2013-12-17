@@ -106,8 +106,9 @@ class GUICut
 	{
 		var label = new Text();
 		label.id = "titleLabel";
-		label.style.color = FlxColor.WHITE;
 		label.text = title;
+		// label.style.color = FlxColor.WHITE;
+		label.style.color = 0xffffff;
 
 		return label;
 	}
@@ -149,10 +150,13 @@ class GUICut
 
 	public function addColumn(?title : String) : VBox
 	{
-		var column = new VBox();
+		var column:VBox = new VBox();
 		column.style.padding=10;
+		column.style.backgroundAlpha=0.2;
 		column.style.backgroundColor=0x222521;
 		// column.style.backgroundColorGradientEnd=0x484f46;
+		// 
+		column.paint();
 
 
 		if(title != null)
@@ -271,14 +275,14 @@ class GUICut
 		return check;
 	}
 
-	public function addDropDown(title:String, ?data:IDataSource, ?onChange:Dynamic):List 
+	public function addDropDown(title:String, defaultItem:String, data:IDataSource, ?onChange:Dynamic):List 
 	{
 		var title = createTitleLabel(title);
 		_currentContainer.addChild(title);
 
 		var list = new List();
 
-		list.text= "None";
+		list.text= defaultItem;
 		list.width=200;
 		
 		if (data!=null)
@@ -298,6 +302,59 @@ class GUICut
 		_currentContainer.addChild(list);
 
 		return list;
+	}
+
+	public function addNumericStepper(title:String, current:Int, min:Int, max:Int, step:Float=1, ?onChange:Dynamic):Void 
+	{
+		var title = createTitleLabel(title);
+		_currentContainer.addChild(title);
+
+		var value:Float = current;
+
+		var display = new Text();
+		display.text = Std.string(value);
+		display.style.percentWidth = 40;
+		display.style.color = 0xffffff;
+
+		var increase = new Button();
+		increase.style.percentWidth = 30;
+		increase.text="+";
+
+		var decrease = new Button();
+		decrease.style.percentWidth = 30;
+		decrease.text="-";
+
+		var hbox = new HBox();
+
+		hbox.addChild(display);
+		hbox.addChild(increase);
+		hbox.addChild(decrease);
+		
+		_currentContainer.addChild(hbox);
+
+		decrease.addEventListener(
+			MouseEvent.CLICK, 
+			function (e:MouseEvent)
+			{
+				value-=step;
+				display.text = Std.string(value);
+
+				if (onChange!=null)
+					Reflect.callMethod(this,onChange,[value]);
+			}
+		);
+
+		increase.addEventListener(
+			MouseEvent.CLICK, 
+			function (e:MouseEvent)
+			{
+				value+=step;
+				display.text = Std.string(value);
+
+				if (onChange!=null)
+					Reflect.callMethod(this,onChange,[value]);
+			}
+		);
 	}
 
 
